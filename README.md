@@ -16,6 +16,9 @@ Developed using **VS Code + PlatformIO** with the assistance of **Gemini AI**.
 
 ---
 
+<img width="1440" height="1920" alt="2adb2a10-5b77-404d-bd17-9ff225e2e284" src="https://github.com/user-attachments/assets/ea241dad-91f4-46fd-babe-c393229c8133" />
+
+
 ## ✨ Features / Возможности
 
 * **Real-time Klipper Telemetry / Телеметрия в реальном времени:** Print progress (%), nozzle & bed temperatures (current/target), part cooling fan speed, print status, and estimated remaining time via Moonraker REST API (`port 7125`).
