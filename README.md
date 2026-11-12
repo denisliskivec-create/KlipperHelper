@@ -1,16 +1,8 @@
 # KlipperDial
 
-**English:**
-**KlipperDial** is a compact, standalone mini-monitor for 3D printers running **Klipper and Moonraker**, inspired by circular Bambu Lab companion displays (like BambuHelper).
-Built on an **ESP8266** microcontroller and a **1.28" round IPS display (GC9A01, 240×240)**, it shows real-time print progress, nozzle/bed temperatures, fan speed, and remaining time.
-When the printer is idle or cooling down, the screen automatically turns into a minimalist digital **NTP desk clock**.
-All settings—including Wi-Fi, printer IP, progress bar style, rotation, and language—are easily configured via the built-in **Web UI**.
+**KlipperDial** is a compact, standalone round IPS mini-monitor for 3D printers running **Klipper / Moonraker**, built on **ESP8266** and a **GC9A01 (240×240)** circular display.
 
-**Русский:**
-**KlipperDial** — компактный автономный мини-монитор для 3D-принтеров на базе **Klipper и Moonraker**, вдохновлённый круглыми вспомогательными дисплеями в стиле **Bambu Lab (BambuHelper)**.
-Устройство собрано на микроконтроллере **ESP8266** и круглом **1.28" IPS-дисплее (GC9A01, 240×240)** и в реальном времени отображает прогресс печати, температуры сопла и стола, скорость обдува и оставшееся время.
-Когда принтер простаивает или остывает, экран автоматически переключается в режим лаконичных настольных **NTP-часов** с датой.
-Все параметры — от Wi-Fi и IP принтера до ориентации экрана, шкалы прогресса и языка — настраиваются через встроенную **веб-панель** без перепрошивки.
+**KlipperDial** — компактный автономный мини-монитор с круглым IPS-экраном для 3D-принтеров на базе **Klipper / Moonraker**, собранный на микроконтроллере **ESP8266** и дисплее **GC9A01 (240×240)**.
 
 ---
 
@@ -46,37 +38,38 @@ All settings—including Wi-Fi, printer IP, progress bar style, rotation, and la
 
 ---
 
-## 💻 Build & Flash / Сборка и прошивка
+## 💻 Build & Flash (PlatformIO) / Сборка и прошивка
 
-1. Download or clone this repository / Скачайте или клонируйте этот репозиторий.
-2. Open the project folder in **VS Code** with the **PlatformIO** extension installed / Откройте папку проекта в **VS Code** с установленным расширением **PlatformIO**.
-3. Connect your ESP8266 via USB and click **PlatformIO: Upload** (all libraries and `TFT_eSPI` flags are already configured in `platformio.ini`) / Подключите плату ESP8266 по USB и нажмите **PlatformIO: Upload** (все библиотеки и настройки дисплея уже прописаны в `platformio.ini`).
+1. Open the project folder in **VS Code** with the **PlatformIO** extension installed.
+2. Ensure your `platformio.ini` includes the required libraries and `TFT_eSPI` build flags:
 
----
+```ini
+[env:nodemcuv2]
+platform = espressif8266
+board = nodemcuv2
+framework = arduino
+monitor_speed = 115200
+board_build.filesystem = littlefs
 
-## 🚀 First Setup / Первый запуск
+lib_deps =
+    bodmer/TFT_eSPI@^2.5.43
+    bblanchon/ArduinoJson@^7.2.0
+    tzapu/WiFiManager@^2.0.17
 
-1. Power on the device. On first boot, it will create a Wi-Fi Access Point named **`KlipperDial_Setup`**.
-   *(Включите питание устройства. При первом запуске оно создаст точку доступа Wi-Fi с именем **`KlipperDial_Setup`**).*
-2. Connect to **`KlipperDial_Setup`** from your phone or PC and open `192.168.4.1` (if the captive portal does not pop up automatically).
-   *(Подключитесь к **`KlipperDial_Setup`** со смартфона или ПК и перейдите по адресу `192.168.4.1`, если окно настройки не открылось само).*
-3. Select your home Wi-Fi network, enter the password, and specify your **Klipper printer's local IP address**.
-   *(Выберите домашнюю сеть Wi-Fi, введите пароль и укажите **локальный IP-адрес вашего принтера**).*
-4. Once connected, the screen will display the monitor's own IP address for 3 seconds. Open this IP in any browser to access the **KlipperDial Web Settings**.
-   *(После подключения экран на 3 секунды покажет собственный IP-адрес монитора. Откройте его в любом браузере для доступа к **веб-панели настроек KlipperDial**).*
-
----
-
-## 🔧 Fan Speed Compatibility Note / Настройка отображения вентилятора
-
-Different Klipper printers expose the part cooling fan under different Moonraker objects:
-* **Creality K1 / K2 series:** Uses `output_pin fan0` *(enabled by default)*.
-* **Standard Klipper (Voron, Ender, Sovol, etc.):** Uses the `[fan]` section (`fan.speed`).
-
-If your printer always displays `FAN: 0%`, open `src/main.cpp`, locate `fetchPrinterData()`, and switch the commented lines from `output_pin fan0` to `fan` as described in the inline comments.
-
----
-
-## 📄 License / Лицензия
-
-MIT License — free to use, modify, and share.
+build_flags =
+    -D USER_SETUP_LOADED=1
+    -D GC9A01_DRIVER=1
+    -D TFT_WIDTH=240
+    -D TFT_HEIGHT=240
+    -D TFT_MOSI=13
+    -D TFT_SCLK=14
+    -D TFT_CS=15
+    -D TFT_DC=2
+    -D TFT_RST=0
+    -D LOAD_GLCD=1
+    -D LOAD_FONT2=1
+    -D LOAD_FONT4=1
+    -D LOAD_FONT6=1
+    -D LOAD_GFXFF=1
+    -D SMOOTH_FONT=1
+    -D SPI_FREQUENCY=27000000
